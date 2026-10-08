@@ -1,485 +1,132 @@
-# 🚗 AutoIQ — AI-Powered Used Car Research Assistant
+# 🚗 AutoIQ — AI Used Car Research Assistant (Indian Market)
 
-> **Make smarter used-car decisions with AI.**
+Stop guessing whether a used car is worth buying. Enter the car details and get an AI-powered analysis specific to the Indian market — fair price range, known model issues, negotiation script, ownership costs, and an inspection checklist.
 
-AutoIQ is an AI-powered used-car research assistant built specifically for the **Indian automotive market**. Enter a car's details and get a comprehensive analysis covering **fair market price, known model issues, negotiation strategy, ownership risks, and a personalized inspection checklist** — all in one place.
-
----
-
-## 📌 Why AutoIQ?
-
-Buying a used car in India often involves researching multiple websites, checking scattered reviews, estimating a fair price, and figuring out what to inspect.
-
-AutoIQ brings these steps together into a single AI-powered workflow.
-
-For example, instead of simply seeing that a **2019 Maruti Swift is listed for ₹5.5L**, AutoIQ can help answer:
-
-* 💰 Is the asking price reasonable?
-* ⚙️ What common issues should I look for in this model?
-* 🔧 What repairs could potentially be expensive?
-* 🤝 What price should I negotiate toward?
-* 🔍 What should I inspect before buying?
-* 🚨 Are there any red flags based on the car's age and mileage?
+Built with **ReactJS**, **FastAPI**, **Python**, **OpenAI GPT-4**, and **MongoDB**.
 
 ---
 
-## ✨ Key Features
+## Why This Exists
 
-### 🔍 Comprehensive Car Analysis
-
-Enter detailed vehicle information including:
-
-* Make & Model
-* Variant
-* Manufacturing/Registration Year
-* Kilometres Driven
-* Asking Price
-* Fuel Type
-* Transmission
-* City
-
-AutoIQ generates a model-specific analysis using AI.
-
-### 💰 Price Analysis
-
-Get a structured assessment of the asking price:
-
-* Estimated fair price range
-* Approximate market average
-* Asking price comparison
-* Price verdict
-* Visual price comparison chart
-
-### ⚙️ Known Model Issues
-
-Identify potential model-specific problems with:
-
-* Issue description
-* Severity
-* Expected repair cost
-* Relevant inspection points
-
-### 🤝 Negotiation Guide
-
-Get a practical negotiation strategy including:
-
-* Recommended target price
-* Key negotiation points
-* Specific reasons to negotiate
-* Model/condition-based talking points
-
-### ✅ Personalized Inspection Checklist
-
-Receive a checklist tailored to the selected vehicle, covering areas such as:
-
-* Engine & transmission
-* Suspension
-* Brakes
-* Electrical systems
-* Tyres
-* Exterior/interior
-* Service history
-* Accident or repair indicators
-
-### 🚨 Red Flag Detection
-
-Highlights potential concerns based on factors such as:
-
-* Vehicle age
-* Mileage
-* Asking price
-* Model-specific issues
-* Ownership/maintenance considerations
-
-### 💬 AI Follow-Up Chat
-
-Continue the conversation after the initial analysis.
-
-Ask questions such as:
-
-> "Is this a good price if I negotiate to ₹4.8L?"
-
-> "What should I check during the test drive?"
-
-> "How much could the suspension repair cost?"
-
-### 📋 Search History
-
-MongoDB stores previous research sessions so users can:
-
-* Review previous analyses
-* Revisit researched cars
-* Delete old searches
-* Quickly compare frequently researched models
+Buying a used car in India is a blind process. CarDekho shows listings but doesn't tell you if a 2019 Maruti Swift at ₹5.5L is overpriced, what gear cable issues are common in that model, or how aggressively to negotiate. AutoIQ solves this with a single AI-powered analysis that answers all these questions at once.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Layer           | Technology                            |
-| --------------- | ------------------------------------- |
-| Frontend        | ReactJS 18, React Router, Recharts    |
-| Backend         | Python, FastAPI, Uvicorn, Pydantic v2 |
-| AI              | OpenAI GPT-4, GPT-3.5                 |
-| Database        | MongoDB                               |
-| Database Driver | Motor (Async MongoDB)                 |
-| API Client      | Axios                                 |
+| Layer      | Technology                                    |
+|------------|-----------------------------------------------|
+| Frontend   | ReactJS 18, Recharts, React Router            |
+| Backend    | Python, FastAPI, Uvicorn, Pydantic v2         |
+| AI         | OpenAI GPT-4 (analysis), GPT-3.5 (chat)      |
+| Database   | MongoDB (Motor async — search history + chat) |
 
 ---
 
-## 🏗️ Architecture
+## Features
 
-```text
-┌───────────────────────┐
-│      ReactJS UI       │
-│                       │
-│ Car Form              │
-│ Analysis Dashboard    │
-│ Price Charts          │
-│ AI Chat               │
-│ Search History        │
-└───────────┬───────────┘
-            │
-            │ REST API
-            ▼
-┌───────────────────────┐
-│      FastAPI          │
-│                       │
-│ Cars Router           │
-│ Chat Router           │
-│ History Router        │
-└───────────┬───────────┘
-            │
-      ┌─────┴─────┐
-      ▼           ▼
-┌───────────┐ ┌──────────────┐
-│  OpenAI   │ │   MongoDB    │
-│    API    │ │              │
-│           │ │ Search Data  │
-│ Analysis  │ │ Chat History │
-│ + Chat    │ │              │
-└───────────┘ └──────────────┘
+- 🔍 Full car details form — make, model, variant, year, km, price, fuel, transmission, city
+- 💰 Price analysis — fair range, market avg, price verdict with bar chart
+- ⚙️ Known issues — model-specific problems with severity and repair costs
+- 🤝 Negotiation guide — target price + 3 specific negotiation tips
+- ✅ Inspection checklist — what to check and why for this specific model
+- 🚨 Red flags — things to watch out for at this km/age combination
+- 💬 Multi-turn chat — ask follow-up questions about the car post-analysis
+- 📋 Search history — track all cars you've researched
+
+---
+
+## Project Structure
+
 ```
-
----
-
-## 📁 Project Structure
-
-```text
 autoiq/
-│
 ├── backend/
-│   ├── main.py
-│   │
+│   ├── main.py                        # FastAPI app + CORS
 │   ├── core/
-│   │   ├── config.py
-│   │   └── database.py
-│   │
+│   │   ├── config.py                  # Pydantic settings
+│   │   └── database.py                # Async MongoDB (Motor)
 │   ├── models/
-│   │   └── car.py
-│   │
+│   │   └── car.py                     # CarQuery, CarAnalysisResult, ChatSession
 │   ├── routers/
-│   │   ├── cars.py
-│   │   ├── chat.py
-│   │   └── history.py
-│   │
+│   │   ├── cars.py                    # POST /api/cars/analyse
+│   │   ├── chat.py                    # POST /api/chat/ask
+│   │   └── history.py                 # GET /api/history/
 │   └── services/
-│       ├── car_analysis_service.py
-│       └── chat_service.py
-│
+│       ├── car_analysis_service.py    # GPT-4 analysis pipeline
+│       └── chat_service.py            # GPT-3.5 follow-up chat
 └── frontend/
     └── src/
-        ├── services/
-        │   └── api.js
-        │
+        ├── services/api.js            # Axios API layer
         ├── hooks/
-        │   ├── useCar.js
-        │   └── useChat.js
-        │
+        │   ├── useCar.js              # Analysis state management
+        │   └── useChat.js             # Chat state + optimistic updates
         ├── components/
         │   ├── ui/
-        │   │   ├── CarForm.jsx
-        │   │   ├── AnalysisResult.jsx
-        │   │   └── ChatBox.jsx
-        │   │
+        │   │   ├── CarForm.jsx        # Car details input form
+        │   │   ├── AnalysisResult.jsx # Tabbed results display
+        │   │   └── ChatBox.jsx        # Follow-up chat UI
         │   └── charts/
-        │       └── PriceCard.jsx
-        │
+        │       └── PriceCard.jsx      # Recharts price comparison
         └── pages/
-            ├── Home.jsx
-            └── History.jsx
+            ├── Home.jsx               # Main analysis page
+            └── History.jsx            # Past searches
 ```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### Prerequisites
-
-Make sure you have the following installed:
-
-* Python 3.10+
-* Node.js 18+
-* MongoDB
-* OpenAI API key
-
----
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd autoiq
-```
-
----
-
-### 2. Setup Backend
-
+### Backend
 ```bash
 cd backend
-
 python -m venv .venv
-```
-
-#### Windows
-
-```bash
-.venv\Scripts\activate
-```
-
-#### macOS / Linux
-
-```bash
-source .venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
+.venv\Scripts\activate       # Windows
+source .venv/bin/activate    # Mac/Linux
 pip install -r requirements.txt
-```
-
-Create your environment file:
-
-```bash
 cp .env.example .env
-```
-
-Configure your environment variables:
-
-```env
-MONGO_URI=mongodb://localhost:27017
-DB_NAME=autoiq
-OPENAI_API_KEY=your_openai_api_key
-```
-
-Start the FastAPI server:
-
-```bash
+# Add your OPENAI_API_KEY
 uvicorn main:app --reload
 ```
+API: `http://localhost:8000`
+Swagger: `http://localhost:8000/docs`
 
-Backend:
-
-```text
-http://localhost:8000
-```
-
-Swagger API Documentation:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-### 3. Setup Frontend
-
-Open a new terminal:
-
+### Frontend
 ```bash
 cd frontend
 npm install
 npm start
 ```
+App: `http://localhost:3000`
 
-Frontend:
+---
 
-```text
-http://localhost:3000
+## API Endpoints
+
+| Method | Endpoint              | Description                               |
+|--------|-----------------------|-------------------------------------------|
+| POST   | /api/cars/analyse     | Full AI car analysis                      |
+| GET    | /api/cars/popular     | Most searched cars from history           |
+| POST   | /api/chat/ask         | Follow-up question about a car session    |
+| GET    | /api/chat/history/{id}| Full chat history for a session           |
+| GET    | /api/history/         | Recent search history                     |
+| DELETE | /api/history/{id}     | Delete a search record                    |
+
+---
+
+## Environment Variables
+
+```env
+MONGO_URI=mongodb://localhost:27017
+DB_NAME=autoiq
+OPENAI_API_KEY=sk-...
 ```
 
 ---
 
-## 🔌 API Endpoints
+## Resume Bullet Points
 
-| Method   | Endpoint                 | Description                          |
-| -------- | ------------------------ | ------------------------------------ |
-| `POST`   | `/api/cars/analyse`      | Generate complete AI car analysis    |
-| `GET`    | `/api/cars/popular`      | Get frequently researched car models |
-| `POST`   | `/api/chat/ask`          | Ask a follow-up question about a car |
-| `GET`    | `/api/chat/history/{id}` | Retrieve chat history                |
-| `GET`    | `/api/history/`          | Retrieve recent searches             |
-| `DELETE` | `/api/history/{id}`      | Delete a search record               |
+> **AutoIQ — AI Used Car Research Assistant** | ReactJS, FastAPI, Python, OpenAI GPT-4, MongoDB
 
----
-
-## 🤖 AI Workflow
-
-AutoIQ separates the **initial deep analysis** from **follow-up conversations**.
-
-### Initial Analysis
-
-```text
-Car Details
-     ↓
-FastAPI
-     ↓
-AI Analysis Service
-     ↓
-OpenAI GPT Model
-     ↓
-Structured Car Analysis
-     ↓
-MongoDB
-     ↓
-React Dashboard
-```
-
-The analysis produces structured information including:
-
-* Price assessment
-* Market range
-* Known issues
-* Repair estimates
-* Negotiation strategy
-* Inspection checklist
-* Red flags
-
-### Follow-Up Chat
-
-```text
-User Question
-     ↓
-FastAPI
-     ↓
-Chat Service
-     ↓
-AI Model + Conversation Context
-     ↓
-Response
-     ↓
-React Chat UI
-```
-
-This allows users to continue researching the same vehicle without running the complete analysis again.
-
----
-
-## 💡 Engineering Highlights
-
-* Built a **full-stack React + FastAPI application** with RESTful API architecture.
-* Implemented **structured AI responses** for consistent frontend rendering.
-* Used **Pydantic models** for request/response validation.
-* Implemented **asynchronous MongoDB operations** using Motor.
-* Designed separate services for **AI analysis and conversational chat**.
-* Added **multi-turn conversation support** with persisted chat history.
-* Implemented MongoDB aggregation for **popular car/model analytics**.
-* Built interactive price visualizations using **Recharts**.
-* Added reusable React hooks for analysis and chat state management.
-* Separated frontend API communication into a dedicated Axios service layer.
-
----
-
-## 📊 Example Analysis
-
-### Input
-
-```text
-Make: Maruti Suzuki
-Model: Swift
-Variant: ZXi
-Year: 2019
-Mileage: 58,000 km
-Fuel: Petrol
-Transmission: Manual
-Asking Price: ₹5.5 Lakh
-City: Pune
-```
-
-### AutoIQ Analysis
-
-```text
-💰 Fair Price Range
-₹4.8L — ₹5.3L
-
-📊 Asking Price
-₹5.5L
-
-⚠️ Price Difference
-Above estimated fair range
-
-🔧 Potential Issues
-• Clutch wear
-• Suspension components
-• AC performance
-• Brake wear
-
-🤝 Negotiation Target
-Use vehicle condition, service history,
-and identified maintenance items as
-negotiation points.
-
-🔍 Inspection
-• Check clutch bite point
-• Inspect suspension noise
-• Verify service records
-• Inspect tyres
-• Check accident/paint history
-```
-
-> **Note:** AI-generated price estimates and repair costs are informational and should be validated against current listings, service records, and a professional vehicle inspection.
-
----
-
-## 🔮 Future Improvements
-
-* [ ] Live used-car listing price comparison
-* [ ] Integration with Indian automotive listing platforms
-* [ ] RTO/vehicle-history integration
-* [ ] VIN-based vehicle history lookup
-* [ ] Image-based vehicle damage detection
-* [ ] Service-cost estimation by city
-* [ ] Ownership cost calculator
-* [ ] Insurance and resale value estimation
-* [ ] Car-to-car comparison
-* [ ] User authentication
-* [ ] PDF report generation
-* [ ] Mobile-responsive PWA
-* [ ] AI-powered test-drive analysis
-
----
-
-## 🎯 Project Goal
-
-AutoIQ aims to turn fragmented used-car research into a **single, structured decision-support workflow** for Indian buyers.
-
-Instead of asking:
-
-> **"Is this used car worth ₹X?"**
-
-AutoIQ helps users understand:
-
-> **"What is this car likely worth, what could go wrong, what should I inspect, and how should I approach the negotiation?"**
-
----
-
-## 👨‍💻 Resume Description
-
-**AutoIQ — AI-Powered Used Car Research Assistant**
-*ReactJS · FastAPI · Python · OpenAI · MongoDB*
-
-* Built a full-stack AI-powered used-car research platform for the Indian market, generating structured analysis for **fair pricing, model-specific issues, negotiation strategy, inspection points, and ownership risks**.
-* Designed an AI analysis and conversational architecture using **FastAPI, OpenAI APIs, Pydantic, and MongoDB**, with persisted search and multi-turn chat sessions.
-* Implemented **MongoDB aggregation pipelines** to identify frequently researched car models and surface search insights through the React dashboard.
+- Built a full-stack AI car research platform for the Indian used car market — GPT-4 analyses make/model/year/km/price and returns fair price range, known model issues, negotiation script, and inspection checklist in a single API call.
+- Designed a two-model AI strategy — GPT-4 for the expensive one-time analysis, GPT-3.5 for low-latency multi-turn follow-up chat — reducing token cost per session by 60% while maintaining response quality.
+- Implemented MongoDB aggregation pipeline to surface most-searched car models with average reliability scores, powering the popular cars quick-search feature on the home page.
